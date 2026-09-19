@@ -6,6 +6,26 @@ export interface Coords {
   accuracy?: number;
 }
 
+/** Mocked "Home" coordinates for the geofencing demo (New Delhi). */
+export const HOME_COORDS: Coords = { lat: 28.6139, lng: 77.2090 };
+
+/** Geofence radius in meters. */
+export const HOME_RADIUS_METERS = 500;
+
+/** Haversine great-circle distance between two coordinates, in meters. */
+export function haversineMeters(a: Coords, b: Coords): number {
+  const R = 6_371_000; // Earth radius in meters
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
 /** Fetch the device's current position via the browser Geolocation API. */
 export function getCurrentPosition(): Promise<Coords> {
   return new Promise((resolve, reject) => {

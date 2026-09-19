@@ -1,13 +1,29 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SosButton } from "@/components/SosButton";
+import { SosModule } from "@/components/SosModule";
+import { GeofenceBanner } from "@/components/GeofenceBanner";
+import { MissedRemindersBanner } from "@/components/MissedRemindersBanner";
+import { api } from "@/convex/_generated/api";
+import { useMutation, useQuery } from "convex/react";
 import { useAuth } from "@/hooks/use-auth";
+import { useGeofence } from "@/hooks/use-geofence";
+import { useEffect } from "react";
 import { LayoutDashboard, LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
 
 export default function Dashboard() {
-  const { user, signOut } = useAuth();
+  const { user, isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
+  const geofence = useGeofence();
+  const medications = useQuery(api.medications.list) ?? [];
+  const seedDemo = useMutation(api.medications.seedDemo);
+
+  // Seed a demo medication schedule on first visit (missed dose included).
+  useEffect(() => {
+    if (isAuthenticated) {
+      void seedDemo({});
+    }
+  }, [isAuthenticated, seedDemo]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -51,7 +67,15 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <SosButton />
+        <MissedRemindersBanner medications={medications} />
+
+        <GeofenceBanner
+          distanceMeters={geofence.distanceMeters}
+          outside={geofence.outside}
+          onDismiss={geofence.dismiss}
+        />
+
+        <SosModule />
       </div>
     </main>
   );
