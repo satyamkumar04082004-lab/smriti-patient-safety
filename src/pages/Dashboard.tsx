@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SosButton } from "@/components/SosButton";
 import { useAuth } from "@/hooks/use-auth";
 import { LayoutDashboard, LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
@@ -49,6 +50,8 @@ export default function Dashboard() {
             default.
           </CardContent>
         </Card>
+
+        <SosButton />
       </div>
     </main>
   );
