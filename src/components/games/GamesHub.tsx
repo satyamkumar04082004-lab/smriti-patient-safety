@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SequenceGame } from "@/components/games/SequenceGame";
+import { MemoryMatchGame } from "@/components/games/MemoryMatchGame";
 import { GAMES } from "@/lib/games";
 import { ChevronRight, Lock } from "lucide-react";
 import { useState } from "react";
@@ -43,6 +44,19 @@ export function GamesHub() {
 
   if (activeGame) {
     const prog = progressFor(activeGame.slug);
+    if (activeGame.slug === "memory-match") {
+      return (
+        <MemoryMatchGame
+          slug={activeGame.slug}
+          unlockedLevel={prog.unlockedLevel}
+          bestScore={prog.bestScore}
+          onAttempt={({ level, accuracy }) =>
+            void handleAttempt(activeGame.slug, level, accuracy)
+          }
+          onExit={() => setActiveSlug(null)}
+        />
+      );
+    }
     return (
       <SequenceGame
         slug={activeGame.slug}

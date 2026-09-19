@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { GAMES, PASS_THRESHOLD, sequenceAccuracy } from "@/lib/games";
 import { ArrowLeft, CheckCircle2, RotateCcw, XCircle } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface SequenceGameProps {
   slug: string;
@@ -12,11 +12,6 @@ interface SequenceGameProps {
   bestScore: number;
   onAttempt: (args: { level: number; accuracy: number }) => void;
   onExit: () => void;
-}
-
-interface Round {
-  sequence: number[];
-  flashIndex: number | "showing" | "input" | "done";
 }
 
 /**
