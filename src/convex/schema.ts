@@ -30,10 +30,10 @@ const schema = defineSchema(
       role: v.optional(roleValidator),
       // SMRITI mock credential login fields
       username: v.optional(v.string()),
-      password: v.optional(v.string()), // mock plaintext for the demo only
       phone: v.optional(v.string()),
-      linkedPatient: v.optional(v.id("users")), // set by caregiver OTP linking
-    }).index("email", ["email"]),
+    })
+      .index("email", ["email"])
+      .index("by_username", ["username"]),
 
     // One-tap SOS: fired from patient's live location
     sosEvents: defineTable({

@@ -80,12 +80,21 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
     setIsLoading(true);
     setError(null);
     try {
-      await signIn("password", {
-        flow: "signUp",
-        email: `${username.trim().toLowerCase()}@smriti.app`,
-        password,
-        name: username.trim(),
-      });
+      try {
+        await signIn("password", {
+          flow: "signUp",
+          email: `${username.trim().toLowerCase()}@smriti.app`,
+          password,
+          name: username.trim(),
+        });
+      } catch {
+        // Already registered: fall back to sign-in with credentials.
+        await signIn("password", {
+          flow: "signIn",
+          email: `${username.trim().toLowerCase()}@smriti.app`,
+          password,
+        });
+      }
       await ensureProfile({
         role,
         username: username.trim(),
